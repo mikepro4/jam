@@ -28,6 +28,12 @@ const STATIC_DIR = "static";
 
 const app = express();
 
+require("./models/User");
+require("./services/passport");
+
+mongoose.Promise = global.Promise;
+mongoose.connect(keys.mongoURI, { useNewUrlParser: true });
+
 app.use(cors());
 app.use(
 	PROXY_ROUTE,
@@ -51,7 +57,9 @@ app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(fileUpload());
 
+
 require("./routes/mailRoutes")(app);
+require("./routes/authRoutes")(app);
 
 app.use(express.static(STATIC_DIR));
 app.use(express.static(PUBLIC_DIR));

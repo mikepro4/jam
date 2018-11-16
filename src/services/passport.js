@@ -31,7 +31,6 @@ passport.use(
 			}
 
 			const user = await new User({
-				credits: 100,
 				accessToken,
 				refreshToken,
 				googleId: profile.id,
