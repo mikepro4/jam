@@ -1,0 +1,36 @@
+.section-hero {
+
+  .hero-headline-container {
+    margin-top: 30px;
+
+    .hero-headline {
+      position: relative;
+      left: -6px;
+
+      .hero-healine-textline {
+        font-size: 90px;
+        font-weight: 600;
+        letter-spacing: 1.1px;
+        line-height: 1.2em;
+      }
+    }
+
+    .hero-divider {
+      width: 90px;
+      height: 6px;
+      background: $white;
+      margin: 40px 0 40px 0;
+    }
+
+    .hero-description {
+      letter-spacing: 0.8px;
+      font-weight: 300;
+      font-size: 2vh;
+      line-height: 1.7em;
+    }
+  }
+
+  .hero-buttons {
+    margin: 40px 0 0 0;
+  }
+}

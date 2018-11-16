@@ -1,0 +1,91 @@
+.of-button {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  height: 54px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 15px 0 15px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: all 1s;
+    transform: translateY(100%);
+  }
+
+  .of-button-text {
+    position: relative;
+    top: -1px;
+    transition: all 1s;
+    letter-spacing: 1.3px;
+  }
+
+  &:hover {
+    color: $white;
+
+    .of-button-text {
+      letter-spacing: 2.3px;  
+    }
+  }
+
+  &.of-button-white {
+    &.of-button-outlined {
+      border: 1px solid $white;
+      color: $white;
+      background: transparent;
+
+      &:hover {
+        color: $white;
+
+        &:before {
+          background: rgba($white, 0.15);
+          transform: translateY(0%);
+        }
+      }
+    }
+
+    &.of-button-filled {
+      color: $black;
+      background: $white;
+
+      &:hover {
+        color: $black;
+
+        &:before {
+          background: rgba($black, 0.15);
+          transform: translateY(0%);
+        }
+      }
+    }
+  }
+
+  &.of-button-black {
+    &.of-button-outlined {
+      border: 1px solid $black;
+      color: $black;
+      background: transparent;
+
+      &:hover {
+        color: $black;
+      }
+    }
+    &.of-button-filled {
+      color: $white;
+      background: $black;
+
+      &:hover {
+        color: $white;
+      }
+    }
+  }
+}

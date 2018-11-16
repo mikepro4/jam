@@ -1,0 +1,47 @@
+.section-steps {
+
+  .steps-headline-container {
+    font-size: 82px;
+    line-height: 100px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0 0 70px 0;
+
+    .steps-headline-line {}
+  }
+
+  .single-step {
+    .step-count {
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.4;
+    }
+
+    .step-name {
+      font-weight: 600;
+      font-size: 36px;
+      line-height: 38px;
+      margin: 25px 0 0 0;
+      letter-spacing: 1px;
+    }
+
+    .divider-container {
+      width: 0;
+      background: rgba($white, 0.2);
+      height: 1px;
+      margin: 30px 0 30px 0;
+    }
+
+    .step-description {
+      font-size: 14px;
+      line-height: 24px;
+      font-weight: 300;
+      letter-spacing: 0.7px;
+    }
+  }
+
+  .button-container {
+    margin-top: 70px;
+  }
+}

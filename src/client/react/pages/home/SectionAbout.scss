@@ -1,0 +1,21 @@
+.section-about {
+
+  .about-description {
+    line-height: 38px;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.7px;
+    margin-top: 150px;
+
+    .divider-container {
+      width: 0;
+      background: rgba($white, 0.2);
+      height: 1px;
+      margin: 0 0 50px 0;
+    }
+
+    .about-description-line {
+      margin: 0 0 50px 0
+    }
+  }
+}

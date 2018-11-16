@@ -1,0 +1,22 @@
+.of-grid-bottom-right {
+  position: fixed;
+  bottom: 20px;
+  z-index: 1000;
+  width: width(5);
+  right: 40px;
+  text-align: right;
+  transform: rotate(90deg) translateX(18px);
+  transform-origin: top right;
+  display: flex;
+  flex-direction: column;
+
+
+  .of-container {
+    transition: all 1s;
+    letter-spacing: 1px;
+    font-size: 12px;
+    font-weight: 300;
+    text-transform: uppercase;
+    margin: 0 0 5px 0;
+  }
+}

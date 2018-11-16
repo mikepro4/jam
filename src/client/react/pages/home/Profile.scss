@@ -1,0 +1,35 @@
+.profile-avatar-container {
+  display: flex;
+
+  .profile-avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 100px;
+    overflow: hidden;
+
+    img {
+      max-width: 100%;
+    }
+  }
+
+  .profile-info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 0 0 15px;
+    letter-spacing: 0.8px;
+
+
+    .profile-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 5px 0;
+    }
+
+    .profile-description {
+      font-size: 12px;
+      font-weight: 300;
+      opacity: 0.5;
+    }
+  }
+}

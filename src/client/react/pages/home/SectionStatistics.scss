@@ -1,0 +1,63 @@
+.section-statistics {
+  .statistics-title {
+    font-size: 80px;
+    margin: 0 0 50px 0;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .statistics-section-title {
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin: 0 0 5px 0;
+    font-weight: 300;
+    opacity: 0.4;
+    text-transform: uppercase;
+  }
+
+  .statistics-section-value {
+    font-size: 42px;
+    letter-spacing: 0.7px;
+  }
+
+  .divider-container {
+    width: 0;
+    background: rgba($white, 0.1);
+    height: 1px;
+    margin: 30px 0 30px 0;
+  }
+
+  .statistics-line {
+    margin: 20px 0 20px 0;
+
+    .statistics-line-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 26px;
+      font-weight: 300;
+
+      .statistics-line-label {
+      }
+      .statistics-line-percent {
+        opacity: 0.3;
+      }
+    }
+
+    .statistics-line-container {
+      width: 100%;
+      background: rgba($white, 0.1);
+      height: 1px;
+      position: relative;
+      margin: 10px 0 0 0;
+
+      .statistic-line-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: $white;
+        height: 1px;
+      }
+    }
+  }
+
+}

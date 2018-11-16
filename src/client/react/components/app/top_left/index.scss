@@ -1,0 +1,51 @@
+.of-grid-top-left {
+  position: fixed;
+  top: 40px;
+  z-index: 1000;
+  width: width(5);
+  left: left(4);
+  display: flex;
+
+  .of-container {
+    transition: all 1s;
+    letter-spacing: 1px;
+    font-size: 12px;
+    font-weight: 300;
+  }
+
+  &:hover {
+    .of-container {
+      opacity: 0.3;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  .divider-container {
+    width: 40px;
+    position: relative;
+    margin: 8px 10px 0 10px;
+    height: 1px;
+    overflow: hidden;
+
+    .divider-bar {
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 1px;
+      background: $white;
+      transition: all 1s;
+
+      &.right {
+        left: 100%;
+      }
+
+      &.left {
+        left: -100%;
+      }
+    }
+  }
+}
