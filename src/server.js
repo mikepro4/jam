@@ -29,6 +29,8 @@ const STATIC_DIR = "static";
 const app = express();
 
 require("./models/User");
+require("./models/Jam");
+require("./models/Viz");
 require("./services/passport");
 
 mongoose.Promise = global.Promise;
