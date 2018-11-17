@@ -4,13 +4,6 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import posed, { PoseGroup } from 'react-pose';
 import SplitText from 'react-pose-text';
-import Images from "./Images"
-import SectionHero from "./SectionHero"
-import SectionAbout from "./SectionAbout"
-import SectionSteps from "./SectionSteps"
-import SectionStatistics from "./SectionStatistics"
-import SectionPayment from "./SectionPayment"
-import SectionOpportunities from "./SectionOpportunities"
 
 class HomePage extends Component {
 	state = {
@@ -35,7 +28,6 @@ class HomePage extends Component {
 			let itemWidth = this.refs.square.clientWidth
 			return itemWidth
 		}
-
 	}
 
 	render() {

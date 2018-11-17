@@ -18,23 +18,8 @@
 @import "../App";
 @import "../react/pages/canvas/index";
 @import "../react/pages/home/index";
-@import "../react/pages/home/Images";
-@import "../react/pages/home/Profile";
-@import "../react/pages/home/SectionHero";
-@import "../react/pages/home/SectionAbout";
-@import "../react/pages/home/SectionSteps";
-@import "../react/pages/home/SectionStatistics";
-@import "../react/pages/home/SectionPayment";
-@import "../react/pages/home/SectionOpportunities";
 
 //components
-@import "../react/components/navigation/main_links/index";
-@import "../react/components/app/logo/index";
-@import "../react/components/app/intro/index";
-@import "../react/components/app/top_left/index";
-@import "../react/components/app/top_right/index";
-@import "../react/components/app/bottom_right/index";
-@import "../react/components/app/bottom_left/index";
 @import "../react/components/uikit/Button";
 
 html {
@@ -45,10 +30,10 @@ html {
 body {
 	margin: 0;
 	padding: 0;
-	background: $white;
+	background: #16171A;
 	font-family: "OF", sans-serif;
 	font-weight: 400;
-	color: $black;
+	color: $white;
 	-webkit-font-smoothing: subpixel-antialiased;
 	// -webkit-overflow-scrolling: touch;
 	width: 100%;
@@ -66,41 +51,34 @@ body {
 	-webkit-overflow-scrolling: touch;
 }
 
-// Selection
-// -------------------------
 
-// ::selection {
-//   background: $white;
-//   color: $black;
-// }
-//
-// ::-moz-selection {
-//   background: $white;
-//   color: $black;
-// }
+::selection {
+  background: $white;
+  color: $black;
+}
+
+::-moz-selection {
+  background: $white;
+  color: $black;
+}
 
 // Links
 // -------------------------
 
 a {
-	color: $black;
+	color: $white;
 	text-decoration: none;
 
 	&:hover {
-		color: $black;
+		color: $white;
 		text-decoration: none;
 	}
 
 	&:active {
-		color: $black;
+		color: $white;
 	}
 }
 
 .screen {
   height: 100vh;
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: center;
-  // min-height: 970px;
-  // border-bottom: 1px solid rgba($white, 0.3);
 }

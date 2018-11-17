@@ -6,6 +6,7 @@ const jamSchema = new Schema({
   defaultVizId: String,
   likes: String,
   metadata: {
+    albumCoverUrl: String,
     artistName: String,
     artistNameFontSize: Number,
     artistNameFontFamily: String,
@@ -32,8 +33,8 @@ const jamSchema = new Schema({
           timeEnd: Number,
           title: String,
           desription: String,
-          vizStartId: String,
-          vizEndId: String
+          vizStartParams: [Object],
+          vizEndParams: [Object]
         }
       ]
     }

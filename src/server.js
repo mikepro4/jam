@@ -59,9 +59,10 @@ app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(fileUpload());
 
-
 require("./routes/mailRoutes")(app);
 require("./routes/authRoutes")(app);
+require("./routes/vizRoutes")(app);
+require("./routes/userRoutes")(app);
 
 app.use(express.static(STATIC_DIR));
 app.use(express.static(PUBLIC_DIR));

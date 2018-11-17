@@ -3,6 +3,8 @@ const { Schema } = mongoose;
 
 const vizSchema = new Schema({
   authorId: String,
+  name: String,
+  description: String,
   status: { type: String, default: "draft" },
   shape: {
     rotateSpeed: Number,
@@ -12,6 +14,7 @@ const vizSchema = new Schema({
     frequency: Number,
     boldRate: Number,
     math: String,
+    radius: Number
   },
   point: {
     size: Number,
