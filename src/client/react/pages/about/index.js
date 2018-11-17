@@ -5,15 +5,15 @@ import { Link } from "react-router-dom";
 import posed, { PoseGroup } from 'react-pose';
 import SplitText from 'react-pose-text';
 
-class HomePage extends Component {
+class AboutPage extends Component {
 	state = {};
 
 	componentDidMount() {}
 
 	renderHead = () => (
 		<Helmet>
-			<title>OF – Home Page</title>
-			<meta property="og:title" content="Homepage" />
+			<title>JAM DNA – About Page</title>
+			<meta property="og:title" content="about page" />
 		</Helmet>
 	)
 
@@ -35,10 +35,9 @@ class HomePage extends Component {
 
 function mapStateToProps({ app }) {
 	return {
-    appVisible: app.appVisible
   };
 }
 
 export default {
-	component: connect(mapStateToProps, {})(HomePage)
+	component: connect(mapStateToProps, {})(AboutPage)
 }

@@ -13,13 +13,24 @@ const Parent = posed.ul({
 			duration: 2200
 		}
 	},
-  closed: { opacity: 0 },
+  closed: {
+		opacity: 0
+	},
 	initialPose: 'closed'
 });
 
 const Child = posed.div({
-	open: { y: 0, opacity: 1, transition: {duration: 300}  },
-  closed: { y: 50, opacity: 0},
+	open: {
+		y: 0,
+		opacity: 1,
+		transition: {
+			duration: 300
+		}
+	},
+  closed: {
+		y: 50,
+		opacity: 0
+	},
 	initialPose: 'closed'
 });
 
@@ -28,28 +39,24 @@ class MainLinks extends Component {
 	isActivePath = (pathname) => {
 		return this.props.location.pathname.indexOf(pathname) !== -1
 	}
-	render() {
 
+	render() {
     let links = [
       {
-        url: "/about",
-        name: "About"
+        url: "/Browse",
+        name: "Browse"
       },
       {
-        url: "/portfolio",
-        name: "Portfolio"
+        url: "/myjams",
+        name: "My Jams"
       },
       {
-        url: "/services",
-        name: "Services"
+        url: "/myplaylists",
+        name: "My Playlists"
       },
       {
-        url: "/contact",
-        name: "Contact"
-      },
-      {
-        url: "/faq",
-        name: "FAQ"
+        url: "/likes",
+        name: "Likes"
       }
     ]
 
@@ -62,7 +69,6 @@ class MainLinks extends Component {
 					initialPose="closed"
 					pose={isVisible ? 'open' : 'closed'}
 				>
-
           {links.map(link => {
             return (
               <li key={link.url} className={classNames("main-link-container", {
