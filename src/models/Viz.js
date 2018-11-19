@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const vizSchema = new Schema({
+  default: { type: Boolean, default: false },
+  highlighted: { type: Boolean, default: false },
   authorId: String,
   name: String,
   description: String,

@@ -3,6 +3,7 @@ import App from "../App";
 import Home from "../react/pages/home";
 import About from "../react/pages/about";
 import Canvas from "../react/pages/canvas";
+import MyJams from "../react/pages/myjams";
 
 export default [
 	{
@@ -30,6 +31,14 @@ export default [
 				exact: true,
 				params: {
 					name: "canvas"
+				}
+			},
+			{
+				...MyJams,
+				path: "/myjams",
+				exact: true,
+				params: {
+					name: "my jams"
 				}
 			}
 		]

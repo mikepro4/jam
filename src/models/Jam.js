@@ -17,11 +17,11 @@ const jamSchema = new Schema({
     audioUrl: String,
     textColor: String,
     controlsColor: String,
-    textPosition: String
+    textPosition: String,
+    createdBy: String,
+    createdAt: { type: Date, default: Date.now }
   },
-  userId: String,
   status: { type: String, default: "draft" },
-	createdAt: { type: Date, default: Date.now },
   vizKeyFramesTracks: [
     {
       title: String,

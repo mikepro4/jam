@@ -21,6 +21,7 @@
 
 //components
 @import "../react/components/uikit/Button";
+@import "../react/components/header/index";
 
 html {
 	// overflow: hidden;
@@ -30,10 +31,10 @@ html {
 body {
 	margin: 0;
 	padding: 0;
-	background: #16171A;
 	font-family: "OF", sans-serif;
 	font-weight: 400;
-	color: $white;
+	background: $backgroundColor;
+	color: $mainFontColor;
 	-webkit-font-smoothing: subpixel-antialiased;
 	// -webkit-overflow-scrolling: touch;
 	width: 100%;
@@ -51,14 +52,13 @@ body {
 	-webkit-overflow-scrolling: touch;
 }
 
-
 ::selection {
-  background: $white;
+  background: $mainFontColor;
   color: $black;
 }
 
 ::-moz-selection {
-  background: $white;
+  background: $mainFontColor;
   color: $black;
 }
 
@@ -66,16 +66,16 @@ body {
 // -------------------------
 
 a {
-	color: $white;
+	color: $mainFontColor;
 	text-decoration: none;
 
 	&:hover {
-		color: $white;
+		color: $mainFontColor;
 		text-decoration: none;
 	}
 
 	&:active {
-		color: $white;
+		color: $mainFontColor;
 	}
 }
 

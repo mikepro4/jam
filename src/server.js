@@ -26,15 +26,13 @@ const PROXY_ROUTE = "/api_call";
 const PUBLIC_DIR = "public";
 const STATIC_DIR = "static";
 
-const app = express();
-
-require("./models/User");
-require("./models/Jam");
-require("./models/Viz");
-require("./services/passport");
-
+const options = {
+	 useNewUrlParser: true
+ };
 mongoose.Promise = global.Promise;
-mongoose.connect(keys.mongoURI, { useNewUrlParser: true });
+mongoose.connect(keys.mongoURI, options)
+
+const app = express();
 
 app.use(cors());
 app.use(
@@ -59,13 +57,19 @@ app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(fileUpload());
 
+app.use(express.static(STATIC_DIR));
+app.use(express.static(PUBLIC_DIR));
+
+require("./models/User");
+require("./models/Jam");
+require("./models/Viz");
+require("./services/passport");
+
+require("./routes/jamRoutes")(app);
 require("./routes/mailRoutes")(app);
 require("./routes/authRoutes")(app);
 require("./routes/vizRoutes")(app);
 require("./routes/userRoutes")(app);
-
-app.use(express.static(STATIC_DIR));
-app.use(express.static(PUBLIC_DIR));
 
 app.get("*", (request, response) => {
 	const axiosInstance = axios.create({

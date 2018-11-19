@@ -10,9 +10,17 @@ import keydown from "react-keydown";
 import classNames from "classnames"
 import { Link } from "react-router-dom";
 
-import {showGrid, hideGrid, resetScrollTo, updateTotalPixels, updateTotalScrolledPixels} from "./redux/actions/appActions";
+import {
+	showGrid,
+	hideGrid,
+	resetScrollTo,
+	updateTotalPixels,
+	updateTotalScrolledPixels,
+	fetchCurrentUser
+} from "./redux/actions/appActions";
 
 import Grid from "./react/components/grid"
+import Header from "./react/components/header"
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -37,6 +45,8 @@ class App extends Component {
 		setTimeout(() => {
 			this.forceUpdate()
 		}, 1)
+
+		this.props.fetchCurrentUser()
 	}
 
 	handleScroll = (event) => {
@@ -118,6 +128,8 @@ class App extends Component {
 					clientWidth={this.state.clientWidth}
 				/>
 
+				<Header/>
+
 				<div className="of-grid of-grid-app">
 
 					<div className={classNames({"of-grid-content-visible": true}, "of-grid-content")}>
@@ -135,7 +147,8 @@ function mapStateToProps(state) {
 	return {
 		gridVisible: state.app.gridVisible,
 		location: state.router.location,
-		scrollTo: state.app.scrollTo
+		scrollTo: state.app.scrollTo,
+		auth: state.app.user
 	};
 }
 
@@ -146,6 +159,7 @@ export default {
 		resetScrollTo,
 		updateTotalPixels,
 		updateTotalPixels,
-		updateTotalScrolledPixels
+		updateTotalScrolledPixels,
+		fetchCurrentUser
 	})(withRouter(App))
 };

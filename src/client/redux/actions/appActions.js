@@ -7,10 +7,22 @@ import {
 	UPDATE_TOTAL_PIXELS,
 	UPDATE_TOTAL_SCROLLED_PIXELS,
 	SCROLL_TO,
-	SCROLL_TO_RESET
+	SCROLL_TO_RESET,
+	FETCH_AUTH
 } from "../actions/types";
 
-/////////////////////////////////////////////////
+// =============================================================================
+
+export const fetchCurrentUser = () => async (dispatch, getState, api) => {
+	const res = await axios.get("api/current_user");
+
+	dispatch({
+		type: FETCH_AUTH,
+		payload: res.data
+	})
+}
+
+// =============================================================================
 
 export const showGrid = () => dispatch => {
 	dispatch({
@@ -24,8 +36,7 @@ export const hideGrid = () => dispatch => {
 	});
 };
 
-/////////////////////////////////////////////////
-
+// =============================================================================
 
 export const updateTotalPixels = (total, clientWidth, clientHeight) => async (dispatch, getState) => {
 	dispatch({
@@ -43,7 +54,7 @@ export const updateTotalScrolledPixels = (px) => async (dispatch, getState) => {
 	});
 }
 
-/////////////////////////////////////////////////
+// =============================================================================
 
 export const setScrollTo = (px) => async (dispatch) => {
 	dispatch({

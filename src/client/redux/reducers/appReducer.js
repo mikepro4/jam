@@ -4,7 +4,8 @@ import {
 	SCROLL_TO,
 	SCROLL_TO_RESET,
 	SHOW_GRID,
-	HIDE_GRID
+	HIDE_GRID,
+	FETCH_AUTH
 } from "../actions/types";
 
 export const initialState = {
@@ -14,10 +15,16 @@ export const initialState = {
 	totalScrolledPixels: 0,
 	scrollTo: null,
 	gridVisible: false,
+	user: null
 };
 
 export const appReducer = (state = initialState, action) => {
 	switch (action.type) {
+		case FETCH_AUTH:
+			return {
+				...state,
+				user: action.payload
+			}
 		case SHOW_GRID:
 			return {
 				...state,

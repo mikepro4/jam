@@ -1,7 +1,15 @@
 $padding: 30px;
+$headerHeight: 95px;
 
 // Responsiveness variables
 $mobile: 950px;
 $small: 1250px;
 $regular: 1400px;
 $large: 1700px;
+
+// colors
+// $backgroundColor: #16171A;
+// $mainFontColor: $white;
+
+$backgroundColor: $white;
+$mainFontColor: $black;

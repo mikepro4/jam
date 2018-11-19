@@ -14,7 +14,7 @@ const Parent = posed.ul({
 		}
 	},
   closed: {
-		opacity: 0
+		opacity: 1
 	},
 	initialPose: 'closed'
 });
@@ -27,10 +27,14 @@ const Child = posed.div({
 			duration: 300
 		}
 	},
-  closed: {
-		y: 50,
-		opacity: 0
+	closed: {
+		y: 0,
+		opacity: 1
 	},
+  // closed: {
+	// 	y: 50,
+	// 	opacity: 0
+	// },
 	initialPose: 'closed'
 });
 
@@ -75,7 +79,7 @@ class MainLinks extends Component {
                   "main-link-active": this.isActivePath(link.url)
                 })}
               >
-								<Child>
+								<Child className="link-wrapper">
 	                <Link to ={link.url} className="main-link">
 	                  <span className="main-link-label">{link.name}</span>
 	                </Link>
