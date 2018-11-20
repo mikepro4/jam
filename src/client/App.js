@@ -21,6 +21,7 @@ import {
 
 import Grid from "./react/components/grid"
 import Header from "./react/components/header"
+import Player from "./react/components/player"
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -128,6 +129,8 @@ class App extends Component {
 					clientWidth={this.state.clientWidth}
 				/>
 
+				<Player />
+
 				<Header/>
 
 				<div className="of-grid of-grid-app">
@@ -137,6 +140,7 @@ class App extends Component {
 					</div>
 
 				</div>
+
 
 			</div>
 		)

@@ -41,7 +41,7 @@ class Viz extends Component {
 
   componentDidUpdate = (prevprops) => {
     if(prevprops.start !== this.props.start) {
-      this.updateDimensions()
+      // this.updateDimensions()
     }
     if(prevprops.isZoomed !== this.props.isZoomed
       || prevprops.app.clientWidth !== this.props.app.clientWidth

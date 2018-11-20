@@ -35,3 +35,14 @@ export const SEARCH_VIZ = "app/SEARCH_VIZ";
 export const SEARCH_VIZ_SUCCESS = "app/SEARCH_VIZ_SUCCESS";
 
 // =============================================================================
+
+// Player
+
+export const TRACK_LOAD = "app/TRACK_LOAD";
+export const TRACK_PLAY = "app/TRACK_PLAY";
+export const TRACK_PAUSE = "app/TRACK_PAUSE";
+export const TRACK_STOP = "app/TRACK_STOP";
+export const TRACK_SEEK = "app/TRACK_SEEK";
+export const TRACK_PLAYING = "app/TRACK_PLAYING";
+
+// =============================================================================

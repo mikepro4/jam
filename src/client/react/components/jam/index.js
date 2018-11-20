@@ -8,6 +8,13 @@ import {
 	deleteJam
 } from '../../../redux/actions/jamActions'
 
+import {
+	trackPlay,
+	trackPause,
+	trackStop,
+	trackSeek
+} from '../../../redux/actions/playerActions'
+
 import Viz from '../viz/'
 
 const transition = {
@@ -65,51 +72,22 @@ class Jam extends Component {
 						<button onClick={() => this.props.deleteJam(this.props.jam._id)}>Delete</button>
 					</div>
 
-					{this.state.start && <audio
-						id={`audio-${this.props.jam._id}`}
-						ref="audio"
-						controls={true}
-						src={this.props.jam.metadata.audioUrl}
-						onLoadedData={() => {
-						}}
-						>
-					</audio>}
-
-
-
-
-
 				</JamContainer>
 
 				<div className="audio-controls-container">
-					<div>Duration: {this.refs.audio && this.refs.audio.duration}</div>
-					<div>Current time: {this.refs.audio && this.refs.audio.currentTime}</div>
+					<div>Status: {this.props.player.jamId == this.props.jam._id ? (
+						<div>{this.props.player.status}</div> ) : (
+						<div>Not loaded</div>)}
+					</div>
+					<div>Duration: {this.props.player.trackMetadata.duration}</div>
+					<div>Current time: {this.props.player.currentTime}</div>
 					<div onClick={() => {
-						this.setState({
-							start: true
-						}, () => {
-							this.refs.audio.play()
-						})
-						// var AudioContext = window.AudioContext
-				    // || window.webkitAudioContext
-				    // || false;
-				    // let context = new AudioContext();
-				    // let analyser = context.createAnalyser();
-						// let audio = document.getElementById(`audio-${this.props.jam._id}`);
-				    // audio.crossOrigin = "anonymous";
-				    // let audioSrc = context.createMediaElementSource(audio);
-				    // audioSrc.connect(analyser);
-				    // audioSrc.connect(context.destination);
+						this.props.trackPlay(this.props.jam)
 					}}>play</div>
-					<div onClick={() => {this.refs.audio.pause()}}>pause</div>
-					<div onClick={() => {
-						this.refs.audio.currentTime = 100
-						this.refs.audio.play()
-					}}>seek to 100</div>
+					<div onClick={() => {this.props.trackPause(this.props.jam)}}>pause</div>
+					<div onClick={() => {this.props.trackStop(this.props.jam)}}>stop</div>
+					<div onClick={() => {this.props.trackSeek(100, this.props.jam)}}>seek to 100</div>
 				</div>
-
-
-
 
 
       </div>
@@ -120,8 +98,15 @@ class Jam extends Component {
 function mapStateToProps(state) {
 	return {
 		auth: state.app.user,
-		location: state.router.location
+		location: state.router.location,
+		player: state.player
 	};
 }
 
-export default connect(mapStateToProps, {deleteJam})(Jam);
+export default connect(mapStateToProps, {
+	deleteJam,
+	trackPlay,
+	trackPause,
+	trackStop,
+	trackSeek
+})(Jam);
