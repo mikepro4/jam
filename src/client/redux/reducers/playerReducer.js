@@ -52,7 +52,6 @@ export const playerReducer = (state = initialState, action) => {
     case TRACK_SEEK:
       return {
         ...state,
-        status: "seek",
         seekToSeconds: action.seekToSeconds,
         trackMetadata: action.payload.metadata,
         jamId: action.payload._id

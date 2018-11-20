@@ -18,6 +18,14 @@ class Jam extends Component {
       this.refs.audio.currentTime = 0
     }
 
+    if(
+      prevprops.player.seekToSeconds !== this.props.player.seekToSeconds
+      && this.props.player.seekToSeconds > 0
+    ) {
+      this.refs.audio.currentTime = this.props.player.seekToSeconds
+      this.play()
+    }
+
     if(prevprops.player.status !== this.props.player.status) {
       this.changeStatus(this.props.player.status)
     }
@@ -29,8 +37,6 @@ class Jam extends Component {
   			return this.play()
       case "pause":
   			return this.pause()
-      case "seek":
-        return this.seekTo()
       case "stop":
         return this.stop()
   		default:
@@ -49,16 +55,10 @@ class Jam extends Component {
     this.refs.audio.pause()
   }
 
-  seekTo = () => {
-    console.log("seek")
-    this.refs.audio.currentTime = this.props.player.seekToSeconds
-    this.refs.audio.play()
-  }
-
   stop = () => {
     console.log("stop")
-    this.refs.audio.currentTime = 0
     this.refs.audio.pause()
+    this.refs.audio.currentTime = 0
   }
 
   playing = () => {
