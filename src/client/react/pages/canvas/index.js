@@ -277,7 +277,7 @@ class Canvas extends Component {
                 className="of-grid-gutter-4 of-grid-5"
               >
 								<FileUploader onComplete={(file) => this.handleFileUpload(file)} canUpload={true} />
-								
+
                 <audio
                   ref="audio"
                   autoPlay={true}

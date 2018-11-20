@@ -64,17 +64,32 @@ class Jam extends Component {
 						<button onClick={() => this.props.deleteJam(this.props.jam._id)}>Delete</button>
 					</div>
 
+					<audio
+						id={`audio-${this.props.jam._id}`}
+						ref="audio"
+						controls={true}
+						src={this.props.jam.metadata.audioUrl}
+						onLoadedData={() => {
+						}}
+						>
+					</audio>
+
+
+
 				</JamContainer>
 
-				<audio
-					id={`audio-${this.props.jam._id}`}
-					ref="audio"
-					controls={true}
-					src={this.props.jam.metadata.audioUrl}
-					onLoadedData={() => {
-					}}
-					>
-				</audio>
+				<div className="audio-controls-container">
+					<div>Duration: {this.refs.audio && this.refs.audio.duration}</div>
+					<div>Current time: {this.refs.audio && this.refs.audio.currentTime}</div>
+					<div onClick={() => {this.refs.audio.play()}}>play</div>
+					<div onClick={() => {this.refs.audio.pause()}}>pause</div>
+					<div onClick={() => {
+						this.refs.audio.currentTime = 100
+						this.refs.audio.play()
+					}}>seek to 100</div>
+				</div>
+
+
 
 
 
