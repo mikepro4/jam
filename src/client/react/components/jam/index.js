@@ -20,7 +20,6 @@ const JamContainer = posed.div({
 		height: "100%",
     transition,
     flip: true,
-
   },
   zoom: {
     position: 'fixed',
@@ -29,10 +28,7 @@ const JamContainer = posed.div({
     right: 0,
     bottom: 0,
     transition,
-    flip: true,
-		width: '100vw',
-    height: '100vh',
-		zIndex: 100000
+    flip: true
   }
 });
 
@@ -53,7 +49,10 @@ class Jam extends Component {
 		const pose = this.state.isZoomed ? 'zoom' : 'init';
 
 		return (
-      <div className="jam-container">
+      <div className={classNames({
+						"isZoomed" : this.state.isZoomed
+					}, "jam-container")}
+			>
 				<JamContainer className="jam" pose={pose} onClick={() => this.state.isZoomed ? this.zoomOut() : this.zoomIn()}>
 
 				<div className={classNames({
