@@ -244,80 +244,83 @@ class Viz extends Component {
       analyser = null
     }
 
-    // ctx.fillStyle = "rgba(0,0, 0, 0)";
-		ctx.clearRect(0, 0, this.state.width, this.state.height);
-    // ctx.fillRect(0, 0, this.state.width * 2, this.state.width * 2);
+    if(this.props.jam._id == this.props.player.jamId) {
 
-    this.setState({
-      rotate: this.state.rotate + this.state.rotate_speed
-    })
+      // ctx.fillStyle = "rgba(0,0, 0, 0)";
+  		ctx.clearRect(0, 0, this.state.width, this.state.height);
+      // ctx.fillRect(0, 0, this.state.width * 2, this.state.width * 2);
+
+      this.setState({
+        rotate: this.state.rotate + this.state.rotate_speed
+      })
 
 
 
-    for (let i = 0; i < this.state.points.length; i++) {
-      // console.log(freqData[i]/2)
+      for (let i = 0; i < this.state.points.length; i++) {
+        // console.log(freqData[i]/2)
 
-			let soundModifier
+  			let soundModifier
 
-      if(analyser) {
-        if (i <= 1024) {
-          soundModifier = this.getSoundModifier(i)/2
+        if(analyser) {
+          if (i <= 1024) {
+            soundModifier = this.getSoundModifier(i)/2
+          } else {
+            soundModifier = this.getSoundModifier(i-1024)/2
+          }
+
+          if(soundModifier == 0) {
+            soundModifier = 1
+          }
         } else {
-          soundModifier = this.getSoundModifier(i-1024)/2
-        }
-
-        if(soundModifier == 0) {
           soundModifier = 1
         }
-      } else {
-        soundModifier = 1
-      }
 
-      let point = this.state.points[i];
+        let point = this.state.points[i];
 
-			let t_radius
+  			let t_radius
 
-			if (this.state.math == "sin") {
-				t_radius =
-	        Math.sin(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-	        this.state.radius;
-			} else if (this.state.math == "cos") {
-				t_radius =
-	        Math.cos(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-	        this.state.radius;
-			} else if (this.state.math == "tan") {
-				t_radius =
-	        Math.tan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-	        this.state.radius;
-			} else if (this.state.math == "atan") {
-				t_radius =
-	        Math.atan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-	        this.state.radius;
-			} else if (this.state.math == "log") {
-				t_radius =
-	        Math.log(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-	        this.state.radius;
-			}
+  			if (this.state.math == "sin") {
+  				t_radius =
+  	        Math.sin(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+  	        this.state.radius;
+  			} else if (this.state.math == "cos") {
+  				t_radius =
+  	        Math.cos(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+  	        this.state.radius;
+  			} else if (this.state.math == "tan") {
+  				t_radius =
+  	        Math.tan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+  	        this.state.radius;
+  			} else if (this.state.math == "atan") {
+  				t_radius =
+  	        Math.atan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+  	        this.state.radius;
+  			} else if (this.state.math == "log") {
+  				t_radius =
+  	        Math.log(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+  	        this.state.radius;
+  			}
 
-      let tx = this.state.x + Math.cos(this.state.rotate + this.state.step * i) * t_radius;
-      let ty = this.state.y + Math.sin(this.state.rotate + this.state.step * i) * t_radius;
+        let tx = this.state.x + Math.cos(this.state.rotate + this.state.step * i) * t_radius;
+        let ty = this.state.y + Math.sin(this.state.rotate + this.state.step * i) * t_radius;
 
-      point.vx += (tx - point.x) * this.state.rotate_point_speed;
-      point.vy += (ty - point.y) * this.state.rotate_point_speed;
+        point.vx += (tx - point.x) * this.state.rotate_point_speed;
+        point.vy += (ty - point.y) * this.state.rotate_point_speed;
 
-      point.x += point.vx;
-      point.y += point.vy;
+        point.x += point.vx;
+        point.y += point.vy;
 
-      point.vx *= this.state.friction ;
-      point.vy *= this.state.friction ;
+        point.vx *= this.state.friction ;
+        point.vy *= this.state.friction ;
 
-      if (point.x >= 0 && point.x <= this.state.width && point.y >= 0 && point.y <= this.state.height) {
-        // ctx.fillRect(point.x, point.y, this.state.pointSize, this.state.pointSize);
-				ctx.beginPath();
+        if (point.x >= 0 && point.x <= this.state.width && point.y >= 0 && point.y <= this.state.height) {
+          // ctx.fillRect(point.x, point.y, this.state.pointSize, this.state.pointSize);
+  				ctx.beginPath();
 
-				ctx.arc(point.x,point.y,this.state.pointSize,0,2*Math.PI);
-				ctx.fillStyle = `rgba(255,255,255,${this.state.pointOpacity})`;
-				ctx.fill();
+  				ctx.arc(point.x,point.y,this.state.pointSize,0,2*Math.PI);
+  				ctx.fillStyle = `rgba(255,255,255,${this.state.pointOpacity})`;
+  				ctx.fill();
+        }
       }
     }
 

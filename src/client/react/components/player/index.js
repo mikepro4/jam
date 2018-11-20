@@ -83,18 +83,11 @@ class Jam extends Component {
   }
 
   playing = () => {
-    console.log("playing", this.refs.audio.currentTime)
     this.props.trackPlaying(
       this.props.player.jamId,
       this.refs.audio.currentTime,
       this.props.player.trackMetadata
     )
-		if(this.props.player.analyser) {
-			let freqData = new Uint8Array(this.props.player.analyser.frequencyBinCount)
-			this.props.player.analyser.getByteFrequencyData(freqData)
-			console.log(freqData[100])
-			console.log(this.props.player.analyser)
-		}
   }
 
 	render() {
