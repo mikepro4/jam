@@ -8,6 +8,8 @@ import {
 	deleteJam
 } from '../../../redux/actions/jamActions'
 
+import Viz from '../viz/'
+
 const transition = {
   duration: 400,
   ease: [0.08, 0.69, 0.2, 0.99]
@@ -54,15 +56,25 @@ class Jam extends Component {
 					}, "jam-container")}
 			>
 				<JamContainer className="jam" pose={pose} onClick={() => this.state.isZoomed ? this.zoomOut() : this.zoomIn()}>
-
-				<div className={classNames({
-					"isZoomed" : this.state.isZoomed
-				}, "jam-content")}>
-					{this.props.jam.metadata.artistName} – {this.props.jam.metadata.trackName}
-					<button onClick={() => this.props.deleteJam(this.props.jam._id)}>Delete</button>
-				</div>
+					<Viz jam={this.props.jam} isZoomed={this.state.isZoomed} />
+					<div className={classNames({
+						"isZoomed" : this.state.isZoomed
+					}, "jam-content")}>
+						{this.props.jam.metadata.artistName} – {this.props.jam.metadata.trackName}
+						<button onClick={() => this.props.deleteJam(this.props.jam._id)}>Delete</button>
+					</div>
 
 				</JamContainer>
+
+				<audio
+					id={`audio-${this.props.jam._id}`}
+					ref="audio"
+					controls={true}
+					src={this.props.jam.metadata.audioUrl}
+					onLoadedData={() => {
+					}}
+					>
+				</audio>
 
 
 

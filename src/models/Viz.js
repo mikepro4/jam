@@ -9,13 +9,13 @@ const vizSchema = new Schema({
   description: String,
   status: { type: String, default: "draft" },
   shape: {
-    rotateSpeed: Number,
-    friction: Number,
-    rotatePointSpeed: Number,
-    step: Number,
-    frequency: Number,
-    boldRate: Number,
-    math: String,
+    rotateSpeed: { type: Number, default: 0.001},
+    friction: { type: Number, default: 0.01},
+    rotatePointSpeed: { type: Number, default: 0.01},
+    step: { type: Number, default: 5},
+    frequency: { type: Number, default: 0.0001},
+    boldRate: { type: Number, default: 1},
+    math: { type: String, default: "sin"},
     radius: Number
   },
   point: {
