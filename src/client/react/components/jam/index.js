@@ -36,7 +36,8 @@ const JamContainer = posed.div({
 
 class Jam extends Component {
   state = {
-    isZoomed: false
+    isZoomed: false,
+		start: false
   }
 
 	zoomIn() {
@@ -56,7 +57,7 @@ class Jam extends Component {
 					}, "jam-container")}
 			>
 				<JamContainer className="jam" pose={pose} onClick={() => this.state.isZoomed ? this.zoomOut() : this.zoomIn()}>
-					<Viz jam={this.props.jam} isZoomed={this.state.isZoomed} />
+					<Viz jam={this.props.jam} start={this.state.start} isZoomed={this.state.isZoomed} />
 					<div className={classNames({
 						"isZoomed" : this.state.isZoomed
 					}, "jam-content")}>
@@ -64,7 +65,7 @@ class Jam extends Component {
 						<button onClick={() => this.props.deleteJam(this.props.jam._id)}>Delete</button>
 					</div>
 
-					<audio
+					{this.state.start && <audio
 						id={`audio-${this.props.jam._id}`}
 						ref="audio"
 						controls={true}
@@ -72,7 +73,9 @@ class Jam extends Component {
 						onLoadedData={() => {
 						}}
 						>
-					</audio>
+					</audio>}
+
+
 
 
 
@@ -81,7 +84,23 @@ class Jam extends Component {
 				<div className="audio-controls-container">
 					<div>Duration: {this.refs.audio && this.refs.audio.duration}</div>
 					<div>Current time: {this.refs.audio && this.refs.audio.currentTime}</div>
-					<div onClick={() => {this.refs.audio.play()}}>play</div>
+					<div onClick={() => {
+						this.setState({
+							start: true
+						}, () => {
+							this.refs.audio.play()
+						})
+						// var AudioContext = window.AudioContext
+				    // || window.webkitAudioContext
+				    // || false;
+				    // let context = new AudioContext();
+				    // let analyser = context.createAnalyser();
+						// let audio = document.getElementById(`audio-${this.props.jam._id}`);
+				    // audio.crossOrigin = "anonymous";
+				    // let audioSrc = context.createMediaElementSource(audio);
+				    // audioSrc.connect(analyser);
+				    // audioSrc.connect(context.destination);
+					}}>play</div>
 					<div onClick={() => {this.refs.audio.pause()}}>pause</div>
 					<div onClick={() => {
 						this.refs.audio.currentTime = 100

@@ -37,10 +37,12 @@ class Viz extends Component {
   };
 
   componentDidMount = () => {
-    this.updateDimensions()
   }
 
   componentDidUpdate = (prevprops) => {
+    if(prevprops.start !== this.props.start) {
+      this.updateDimensions()
+    }
     if(prevprops.isZoomed !== this.props.isZoomed
       || prevprops.app.clientWidth !== this.props.app.clientWidth
       || prevprops.app.clientHeight !== this.props.app.clientHeight) {
@@ -222,7 +224,6 @@ class Viz extends Component {
       this.setState({
         rotate: this.state.rotate + this.state.rotate_speed
       })
-
       let freqData = new Uint8Array(analyser.frequencyBinCount)
       analyser.getByteFrequencyData(freqData)
 
