@@ -5,7 +5,8 @@ import classNames from "classnames"
 import posed, { PoseGroup } from 'react-pose';
 
 import {
-	trackPlaying
+	trackPlaying,
+	setAnalyser
 } from '../../../redux/actions/playerActions'
 
 class Jam extends Component {
@@ -13,9 +14,29 @@ class Jam extends Component {
     status: null
   }
 
+	componentDidMount = () => {
+
+	}
+
   componentDidUpdate = (prevprops) => {
     if(prevprops.player.jamId !== this.props.player.jamId) {
-      this.refs.audio.currentTime = 0
+			this.refs.audio.currentTime = 0
+
+			if(!this.props.player.analyser) {
+
+				var AudioContext = window.AudioContext
+				|| window.webkitAudioContext
+				|| false;
+				let context = new AudioContext();
+				let analyser = context.createAnalyser();
+				let audio = this.refs.audio
+				audio.crossOrigin = "anonymous";
+				let audioSrc = context.createMediaElementSource(audio);
+				audioSrc.connect(analyser);
+				audioSrc.connect(context.destination);
+				console.log("componentDidUpdate: ", analyser)
+				this.props.setAnalyser(analyser)
+			}
     }
 
     if(
@@ -68,25 +89,31 @@ class Jam extends Component {
       this.refs.audio.currentTime,
       this.props.player.trackMetadata
     )
+		if(this.props.player.analyser) {
+			let freqData = new Uint8Array(this.props.player.analyser.frequencyBinCount)
+			this.props.player.analyser.getByteFrequencyData(freqData)
+			console.log(freqData[100])
+			console.log(this.props.player.analyser)
+		}
   }
 
 	render() {
 		return (
       <div>
-      {this.props.player.jamId ? (
-        <audio
-          id={`audio-${this.props.player.jamId}`}
-          ref="audio"
-          controls={true}
-          src={this.props.player.trackMetadata.audioUrl}
-          onTimeUpdate={() => {
-            this.playing()
-          }}
-          onLoadedData={() => {
-          }}
-          >
-        </audio>
-      ): ""}
+			{this.props.player.jamId ? (
+				<audio
+	        id="audio"
+	        ref="audio"
+	        controls={true}
+	        src={this.props.player.jamId ? this.props.player.trackMetadata.audioUrl : ""}
+	        onTimeUpdate={() => {
+	          this.playing()
+	        }}
+	        onLoadedData={() => {
+	        }}
+	        >
+	      </audio>
+			) : ""}
 
       </div>
 		);
@@ -101,4 +128,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, {trackPlaying})(Jam);
+export default connect(mapStateToProps, {trackPlaying, setAnalyser})(Jam);

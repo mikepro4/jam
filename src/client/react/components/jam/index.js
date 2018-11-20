@@ -44,7 +44,6 @@ const JamContainer = posed.div({
 class Jam extends Component {
   state = {
     isZoomed: false,
-		start: false
   }
 
 	zoomIn() {
@@ -64,7 +63,7 @@ class Jam extends Component {
 					}, "jam-container")}
 			>
 				<JamContainer className="jam" pose={pose} onClick={() => this.state.isZoomed ? this.zoomOut() : this.zoomIn()}>
-					<Viz jam={this.props.jam} start={this.state.start} isZoomed={this.state.isZoomed} />
+					<Viz jam={this.props.jam} isZoomed={this.state.isZoomed} />
 					<div className={classNames({
 						"isZoomed" : this.state.isZoomed
 					}, "jam-content")}>
@@ -80,7 +79,10 @@ class Jam extends Component {
 						<div>Not loaded</div>)}
 					</div>
 					<div>Duration: {this.props.player.trackMetadata.duration}</div>
-					<div>Current time: {this.props.player.currentTime}</div>
+					<div>Current time: {this.props.player.jamId == this.props.jam._id ? (
+						<div>{this.props.player.currentTime}</div> ) : (
+						<div> - -</div>)}
+					</div>
 					<div onClick={() => {
 						this.props.trackPlay(this.props.jam)
 					}}>play</div>

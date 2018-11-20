@@ -9,6 +9,7 @@ import posed, { PoseGroup } from 'react-pose';
 
 class Viz extends Component {
   state = {
+    audioLoaded: false,
     play: true,
     points: [],
     test: 0,
@@ -37,12 +38,21 @@ class Viz extends Component {
   };
 
   componentDidMount = () => {
+    // this.updateDimensions()
+    this.updateDimensions()
   }
 
   componentDidUpdate = (prevprops) => {
-    if(prevprops.start !== this.props.start) {
-      // this.updateDimensions()
-    }
+
+    // if(prevprops.player.jamId !== this.props.player.jamId) {
+    //   this.setState({
+    //     audioLoaded: false
+    //   }, () => {
+    //     this.update()
+    //
+    //   })
+    // }
+
     if(prevprops.isZoomed !== this.props.isZoomed
       || prevprops.app.clientWidth !== this.props.app.clientWidth
       || prevprops.app.clientHeight !== this.props.app.clientHeight) {
@@ -199,102 +209,143 @@ class Viz extends Component {
   }
 
   update = () => {
+    // if(!this.state.audioLoaded) {
+    //   this.setState({
+    //     audioLoaded: true
+    //   })
+    //   let canvas = this.refs.canvas;
+    //   let ctx = canvas.getContext('2d')
+    //   if(this.props.jam._id == this.props.player.jamId) {
+    //     this.renderFrame(ctx, this.props.player.analyser)
+    //   } else {
+    //     this.renderFrame(ctx, null)
+    //
+    //   }
+    // }
+
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext('2d')
-    var AudioContext = window.AudioContext
-    || window.webkitAudioContext
-    || false;
-    let context = new AudioContext();
-    let analyser = context.createAnalyser();
-    let audio = document.getElementById(`audio-${this.props.jam._id}`);
-    audio.crossOrigin = "anonymous";
-    let audioSrc = context.createMediaElementSource(audio);
-    audioSrc.connect(analyser);
-    audioSrc.connect(context.destination);
-    this.renderFrame(ctx, analyser)
+    this.renderFrame(ctx)
   }
 
-  renderFrame = (ctx, analyser) => {
-    if(this.state.play) {
+  getSoundModifier = (i) => {
+    let freqData = new Uint8Array(this.props.player.analyser.frequencyBinCount)
+    this.props.player.analyser.getByteFrequencyData(freqData)
+    return freqData[i]
+  }
 
-      // ctx.fillStyle = "rgba(0,0, 0, 0)";
-  		ctx.clearRect(0, 0, this.state.width, this.state.height);
-      // ctx.fillRect(0, 0, this.state.width * 2, this.state.width * 2);
+  renderFrame = (ctx) => {
 
-      this.setState({
-        rotate: this.state.rotate + this.state.rotate_speed
-      })
-      let freqData = new Uint8Array(analyser.frequencyBinCount)
-      analyser.getByteFrequencyData(freqData)
+    let analyser
+
+    if(this.props.jam._id == this.props.player.jamId) {
+      analyser = this.props.player.analyser
+    } else {
+      analyser = null
+    }
+
+    // ctx.fillStyle = "rgba(0,0, 0, 0)";
+		ctx.clearRect(0, 0, this.state.width, this.state.height);
+    // ctx.fillRect(0, 0, this.state.width * 2, this.state.width * 2);
+
+    this.setState({
+      rotate: this.state.rotate + this.state.rotate_speed
+    })
 
 
-      for (let i = 0; i < this.state.points.length; i++) {
-        // console.log(freqData[i]/2)
 
-  			let soundModifier
+    for (let i = 0; i < this.state.points.length; i++) {
+      // console.log(freqData[i]/2)
 
-  			if (i <= 1024) {
-  				soundModifier = freqData[i]/2
-  			} else {
-  				soundModifier = freqData[i-1024]/2
-  			}
+			let soundModifier
 
-  			if(soundModifier == 0) {
-  				soundModifier = 1
-  			}
-
-        let point = this.state.points[i];
-
-  			let t_radius
-
-  			if (this.state.math == "sin") {
-  				t_radius =
-  	        Math.sin(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-  	        this.state.radius;
-  			} else if (this.state.math == "cos") {
-  				t_radius =
-  	        Math.cos(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-  	        this.state.radius;
-  			} else if (this.state.math == "tan") {
-  				t_radius =
-  	        Math.tan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-  	        this.state.radius;
-  			} else if (this.state.math == "atan") {
-  				t_radius =
-  	        Math.atan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-  	        this.state.radius;
-  			} else if (this.state.math == "log") {
-  				t_radius =
-  	        Math.log(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-  	        this.state.radius;
-  			}
-
-        let tx = this.state.x + Math.cos(this.state.rotate + this.state.step * i) * t_radius;
-        let ty = this.state.y + Math.sin(this.state.rotate + this.state.step * i) * t_radius;
-
-        point.vx += (tx - point.x) * this.state.rotate_point_speed;
-        point.vy += (ty - point.y) * this.state.rotate_point_speed;
-
-        point.x += point.vx;
-        point.y += point.vy;
-
-        point.vx *= this.state.friction ;
-        point.vy *= this.state.friction ;
-
-        if (point.x >= 0 && point.x <= this.state.width && point.y >= 0 && point.y <= this.state.height) {
-          // ctx.fillRect(point.x, point.y, this.state.pointSize, this.state.pointSize);
-  				ctx.beginPath();
-
-  				ctx.arc(point.x,point.y,this.state.pointSize,0,2*Math.PI);
-  				ctx.fillStyle = `rgba(255,255,255,${this.state.pointOpacity})`;
-  				ctx.fill();
+      if(analyser) {
+        if (i <= 1024) {
+          soundModifier = this.getSoundModifier(i)/2
+        } else {
+          soundModifier = this.getSoundModifier(i-1024)/2
         }
+
+        if(soundModifier == 0) {
+          soundModifier = 1
+        }
+      } else {
+        soundModifier = 1
       }
 
+      let point = this.state.points[i];
+
+			let t_radius
+
+			if (this.state.math == "sin") {
+				t_radius =
+	        Math.sin(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+	        this.state.radius;
+			} else if (this.state.math == "cos") {
+				t_radius =
+	        Math.cos(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+	        this.state.radius;
+			} else if (this.state.math == "tan") {
+				t_radius =
+	        Math.tan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+	        this.state.radius;
+			} else if (this.state.math == "atan") {
+				t_radius =
+	        Math.atan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+	        this.state.radius;
+			} else if (this.state.math == "log") {
+				t_radius =
+	        Math.log(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+	        this.state.radius;
+			}
+
+      let tx = this.state.x + Math.cos(this.state.rotate + this.state.step * i) * t_radius;
+      let ty = this.state.y + Math.sin(this.state.rotate + this.state.step * i) * t_radius;
+
+      point.vx += (tx - point.x) * this.state.rotate_point_speed;
+      point.vy += (ty - point.y) * this.state.rotate_point_speed;
+
+      point.x += point.vx;
+      point.y += point.vy;
+
+      point.vx *= this.state.friction ;
+      point.vy *= this.state.friction ;
+
+      if (point.x >= 0 && point.x <= this.state.width && point.y >= 0 && point.y <= this.state.height) {
+        // ctx.fillRect(point.x, point.y, this.state.pointSize, this.state.pointSize);
+				ctx.beginPath();
+
+				ctx.arc(point.x,point.y,this.state.pointSize,0,2*Math.PI);
+				ctx.fillStyle = `rgba(255,255,255,${this.state.pointOpacity})`;
+				ctx.fill();
+      }
     }
+
 
     requestAnimationFrame(() => this.renderFrame(ctx, analyser));
 
+  }
+
+  setAudioContext = () => {
+    // let audio = document.getElementById(`audio-${this.props.jam._id}`);
+    //
+    // if(audio) {
+    //   this.setState({
+    //     audioLoaded: true
+    //   })
+    //
+    //   var AudioContext = window.AudioContext
+    //   || window.webkitAudioContext
+    //   || false;
+    //   let context = new AudioContext();
+    //   let analyser = context.createAnalyser();
+    //   audio.crossOrigin = "anonymous";
+    //   let audioSrc = context.createMediaElementSource(audio);
+    //   audioSrc.connect(analyser);
+    //   audioSrc.connect(context.destination);
+    //
+    //   console.log("set audio context")
+    // }
   }
 
 	render() {
@@ -316,7 +367,8 @@ function mapStateToProps(state) {
 	return {
 		auth: state.app.user,
 		location: state.router.location,
-    app: state.app
+    app: state.app,
+    player: state.player
 	};
 }
 

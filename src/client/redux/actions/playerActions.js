@@ -7,7 +7,8 @@ import {
   TRACK_PAUSE,
   TRACK_STOP,
   TRACK_SEEK,
-  TRACK_PLAYING
+  TRACK_PLAYING,
+  SET_ANALYSER
 } from "../actions/types";
 
 // =============================================================================
@@ -54,5 +55,12 @@ export const trackPlaying = (id, currentTime, metadata) => async (dispatch, getS
     id: id,
     currentTime: currentTime,
     metadata: metadata
+  });
+}
+
+export const setAnalyser = (analyser) => async (dispatch, getState, api) => {
+  dispatch({
+    type: SET_ANALYSER,
+    payload: analyser
   });
 }

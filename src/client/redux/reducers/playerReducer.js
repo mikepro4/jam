@@ -4,7 +4,8 @@ import {
   TRACK_PAUSE,
   TRACK_STOP,
   TRACK_SEEK,
-  TRACK_PLAYING
+  TRACK_PLAYING,
+  SET_ANALYSER
 } from "../actions/types";
 
 export const initialState = {
@@ -13,11 +14,18 @@ export const initialState = {
   status: "stop",
   currentTime: 0,
   seekToSeconds: null,
-  trackMetadata: {}
+  trackMetadata: {},
+  analyser: null
 };
 
 export const playerReducer = (state = initialState, action) => {
 	switch (action.type) {
+    case SET_ANALYSER: {
+      return {
+        ...state,
+        analyser: action.payload
+      }
+    }
     case TRACK_LOAD:
 			return {
 				...state,
