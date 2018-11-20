@@ -5,7 +5,8 @@ import {
   SEARCH_JAMS,
   SEARCH_JAMS_SUCCESS,
   CREATE_JAM,
-	CREATE_JAM_SUCCESS
+	CREATE_JAM_SUCCESS,
+  DELETE_JAM
 } from "../actions/types";
 
 // =============================================================================
@@ -77,7 +78,13 @@ export const deleteJam = (jamId, success) => async (
 	getState,
 	api
 ) => {
+
 	const response = await axios.post("/api/jams/delete", { jamId });
+  if(response) {
+    dispatch({
+      type: DELETE_JAM
+    });
+  }
 	if (success) {
 		success(response.data);
 	}

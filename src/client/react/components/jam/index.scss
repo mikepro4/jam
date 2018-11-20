@@ -1,0 +1,31 @@
+.jam {
+  background: $black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100000;
+}
+
+.jam-container {
+  position: relative;
+  width: 470px;
+  height: 300px;
+  margin: 0 0 50px 0;
+}
+
+.jam-content {
+  transition: all .2s;
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  width: 100%;
+  font-size: 10px;
+
+  &.isZoomed {
+    position: fixed;
+    font-size: 40px;
+    // opacity: 0;
+  }
+}

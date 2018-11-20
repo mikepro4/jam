@@ -6,8 +6,11 @@ import posed, { PoseGroup } from 'react-pose';
 import SplitText from 'react-pose-text';
 
 import {
-	searchJams
+	searchJams,
+	deleteJam
 } from '../../../redux/actions/jamActions'
+
+import Jam from '../../components/jam/'
 
 class MyJams extends Component {
 	state = {
@@ -23,6 +26,11 @@ class MyJams extends Component {
     if(prevprops.user !== this.props.user) {
       this.loadJams()
     }
+
+		if(prevprops.updateCollection !== this.props.updateCollection) {
+			this.loadJams()
+		}
+
   }
 
   loadJams = () => {
@@ -48,9 +56,9 @@ class MyJams extends Component {
 		return (
       <div className="route-container route-home">
         <div className="of-grid-content-layer" >
-					my jams
-
-          {this.props.loading ? "loading" : ""}
+					{this.props.jamsCollection.map(jam => {
+						return <Jam key={jam._id} jam={jam} />
+					})}
         </div>
       </div>
 		);
@@ -61,10 +69,11 @@ function mapStateToProps(state) {
 	return {
     user: state.app.user,
     jamsCollection: state.jams.loadedJamsCollection,
-    loading: state.jams.loading
+    loading: state.jams.loading,
+		updateCollection: state.jams.updateCollection
 	};
 }
 
 export default {
-	component: connect(mapStateToProps, {searchJams})(MyJams)
+	component: connect(mapStateToProps, {searchJams, deleteJam})(MyJams)
 }

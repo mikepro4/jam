@@ -2,13 +2,15 @@ import {
   SEARCH_JAMS,
   SEARCH_JAMS_SUCCESS,
   CREATE_JAM,
-	CREATE_JAM_SUCCESS
+	CREATE_JAM_SUCCESS,
+  DELETE_JAM
 } from "../actions/types";
 
 export const initialState = {
   loading: false,
 	currentlJam: {},
-  loadedJamsCollection: []
+  loadedJamsCollection: [],
+  updateCollection: false
 };
 
 export const jamsReducer = (state = initialState, action) => {
@@ -16,7 +18,8 @@ export const jamsReducer = (state = initialState, action) => {
     case SEARCH_JAMS:
 			return {
 				...state,
-				loading: true
+				loading: true,
+        updateCollection: false
 			}
     case SEARCH_JAMS_SUCCESS:
       return {
@@ -27,14 +30,20 @@ export const jamsReducer = (state = initialState, action) => {
     case CREATE_JAM:
       return {
         ...state,
-        loading: true
+        loading: true,
       }
 		case CREATE_JAM_SUCCESS:
 			return {
 				...state,
 				currentlJam: action.payload,
-        loading: false
+        loading: false,
+        updateCollection: true
 			}
+    case DELETE_JAM:
+      return {
+        ...state,
+        updateCollection: true
+      }
 		default:
 			return state;
 	}
