@@ -9,7 +9,7 @@ import posed, { PoseGroup } from 'react-pose';
 
 class Viz extends Component {
   state = {
-    audioLoaded: false,
+    playDemo: true,
     play: true,
     points: [],
     test: 0,
@@ -40,6 +40,11 @@ class Viz extends Component {
   componentDidMount = () => {
     // this.updateDimensions()
     this.updateDimensions()
+    setTimeout(() => {
+      this.setState({
+        playDemo: false
+      })
+    }, 3000)
   }
 
   componentDidUpdate = (prevprops) => {
@@ -174,7 +179,6 @@ class Viz extends Component {
   paint = () => {
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext('2d')
-    ctx.fillStyle = "rgba(0, 0, 0, 0)";
     ctx.width = this.state.width;
     ctx.height = this.state.height;
     let points = this.generatePoints()
@@ -193,6 +197,10 @@ class Viz extends Component {
     }
     this.setState({
       points: points
+    }, () => {
+      let canvas = this.refs.canvas;
+      let ctx = canvas.getContext('2d')
+      this.renderOnce(ctx)
     })
 
     return points
@@ -209,126 +217,113 @@ class Viz extends Component {
   }
 
   update = () => {
-    // if(!this.state.audioLoaded) {
-    //   this.setState({
-    //     audioLoaded: true
-    //   })
-    //   let canvas = this.refs.canvas;
-    //   let ctx = canvas.getContext('2d')
-    //   if(this.props.jam._id == this.props.player.jamId) {
-    //     this.renderFrame(ctx, this.props.player.analyser)
-    //   } else {
-    //     this.renderFrame(ctx, null)
-    //
-    //   }
-    // }
-
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext('2d')
     this.renderFrame(ctx)
   }
 
-  getSoundModifier = (i) => {
-    let freqData = new Uint8Array(this.props.player.analyser.frequencyBinCount)
-    this.props.player.analyser.getByteFrequencyData(freqData)
-    return freqData[i]
+  renderOnce = (ctx) => {
+    // ctx.fillStyle = "rgba(0,0, 0, 0)";
+		ctx.clearRect(0, 0, this.state.width, this.state.height);
+    // ctx.fillRect(0, 0, this.state.width * 2, this.state.width * 2);
+
+    this.setState({
+      rotate: this.state.rotate + this.state.rotate_speed
+    })
+
+    let freqData = []
+
+    if(this.props.player.analyser) {
+      freqData = new Uint8Array(this.props.player.analyser.frequencyBinCount)
+      this.props.player.analyser.getByteFrequencyData(freqData)
+    }
+
+    for (let i = 0; i < this.state.points.length; i++) {
+      // console.log(freqData[i]/2)
+
+			let soundModifier
+
+      if(this.props.player.analyser) {
+        if (i <= 1024) {
+          soundModifier = freqData[i]/2
+        } else {
+          soundModifier = freqData[i-1024]/2
+        }
+
+        if(soundModifier == 0) {
+          soundModifier = 1
+        }
+      } else {
+        soundModifier = 1
+      }
+
+      let point = this.state.points[i];
+
+			let t_radius
+
+			if (this.state.math == "sin") {
+				t_radius =
+	        Math.sin(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+	        this.state.radius;
+			} else if (this.state.math == "cos") {
+				t_radius =
+	        Math.cos(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+	        this.state.radius;
+			} else if (this.state.math == "tan") {
+				t_radius =
+	        Math.tan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+	        this.state.radius;
+			} else if (this.state.math == "atan") {
+				t_radius =
+	        Math.atan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+	        this.state.radius;
+			} else if (this.state.math == "log") {
+				t_radius =
+	        Math.log(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
+	        this.state.radius;
+			}
+
+      let tx = this.state.x + Math.cos(this.state.rotate + this.state.step * i) * t_radius;
+      let ty = this.state.y + Math.sin(this.state.rotate + this.state.step * i) * t_radius;
+
+      point.vx += (tx - point.x) * this.state.rotate_point_speed;
+      point.vy += (ty - point.y) * this.state.rotate_point_speed;
+
+      point.x += point.vx;
+      point.y += point.vy;
+
+      point.vx *= this.state.friction ;
+      point.vy *= this.state.friction ;
+
+      if (point.x >= 0 && point.x <= this.state.width && point.y >= 0 && point.y <= this.state.height) {
+        // ctx.fillRect(point.x, point.y, this.state.pointSize, this.state.pointSize);
+				ctx.beginPath();
+
+				ctx.arc(point.x,point.y,this.state.pointSize,0,2*Math.PI);
+				ctx.fillStyle = `rgba(255,255,255,${this.state.pointOpacity})`;
+				ctx.fill();
+      }
+    }
   }
 
   renderFrame = (ctx) => {
 
-    let analyser
+    // if(this.state.playDemo) {
+    //   this.renderOnce(ctx)
+    // }
 
     if(this.props.jam._id == this.props.player.jamId) {
-      analyser = this.props.player.analyser
-    } else {
-      analyser = null
+      this.renderOnce(ctx)
     }
 
-    if(this.props.jam._id == this.props.player.jamId) {
+    requestAnimationFrame(() => this.renderFrame(ctx));
 
-      // ctx.fillStyle = "rgba(0,0, 0, 0)";
-  		ctx.clearRect(0, 0, this.state.width, this.state.height);
-      // ctx.fillRect(0, 0, this.state.width * 2, this.state.width * 2);
+  }
 
-      this.setState({
-        rotate: this.state.rotate + this.state.rotate_speed
-      })
-
-      let freqData = new Uint8Array(this.props.player.analyser.frequencyBinCount)
-      this.props.player.analyser.getByteFrequencyData(freqData)
-
-
-      for (let i = 0; i < this.state.points.length; i++) {
-        // console.log(freqData[i]/2)
-
-  			let soundModifier
-
-        if(analyser) {
-          if (i <= 1024) {
-            soundModifier = freqData[i]/2
-          } else {
-            soundModifier = freqData[i-1024]/2
-          }
-
-          if(soundModifier == 0) {
-            soundModifier = 1
-          }
-        } else {
-          soundModifier = 1
-        }
-
-        let point = this.state.points[i];
-
-  			let t_radius
-
-  			if (this.state.math == "sin") {
-  				t_radius =
-  	        Math.sin(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-  	        this.state.radius;
-  			} else if (this.state.math == "cos") {
-  				t_radius =
-  	        Math.cos(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-  	        this.state.radius;
-  			} else if (this.state.math == "tan") {
-  				t_radius =
-  	        Math.tan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-  	        this.state.radius;
-  			} else if (this.state.math == "atan") {
-  				t_radius =
-  	        Math.atan(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-  	        this.state.radius;
-  			} else if (this.state.math == "log") {
-  				t_radius =
-  	        Math.log(this.state.rotate * soundModifier + this.state.freq * i) * this.state.radius * this.state.bold_rate +
-  	        this.state.radius;
-  			}
-
-        let tx = this.state.x + Math.cos(this.state.rotate + this.state.step * i) * t_radius;
-        let ty = this.state.y + Math.sin(this.state.rotate + this.state.step * i) * t_radius;
-
-        point.vx += (tx - point.x) * this.state.rotate_point_speed;
-        point.vy += (ty - point.y) * this.state.rotate_point_speed;
-
-        point.x += point.vx;
-        point.y += point.vy;
-
-        point.vx *= this.state.friction ;
-        point.vy *= this.state.friction ;
-
-        if (point.x >= 0 && point.x <= this.state.width && point.y >= 0 && point.y <= this.state.height) {
-          // ctx.fillRect(point.x, point.y, this.state.pointSize, this.state.pointSize);
-  				ctx.beginPath();
-
-  				ctx.arc(point.x,point.y,this.state.pointSize,0,2*Math.PI);
-  				ctx.fillStyle = `rgba(255,255,255,${this.state.pointOpacity})`;
-  				ctx.fill();
-        }
-      }
-    }
-
-
-    requestAnimationFrame(() => this.renderFrame(ctx, analyser));
-
+  saveImage = () => {
+    var image = this.refs.canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    console.log(image)
+    // window.location.href=image;
   }
 
   setAudioContext = () => {
@@ -363,6 +358,7 @@ class Viz extends Component {
           width={this.state.width}
           height={this.state.height}
         />
+        <button style={{position: "absolute", zIndex: 100000}} onClick={() => this.saveImage()}>save canvas</button>
       </div>
 		);
 	}
