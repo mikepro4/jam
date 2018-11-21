@@ -9,47 +9,103 @@ import {
 	setAnalyser
 } from '../../../redux/actions/playerActions'
 
-class Jam extends Component {
+class Player extends Component {
   state = {
-    status: null
+    status: null,
+		connected: false
   }
 
 	componentDidMount = () => {
-
+		// var AudioContext = window.AudioContext
+		// || window.webkitAudioContext
+		// || false;
+		// let context = new AudioContext();
+		// let analyser = context.createAnalyser();
+		// let audio = this.refs.audio
+		// audio.crossOrigin = "anonymous";
+		// let audioSrc = context.createMediaElementSource(audio);
+		// audioSrc.connect(analyser);
+		// audioSrc.connect(context.destination);
+		// this.props.passAnalyser(analyser)
 	}
 
   componentDidUpdate = (prevprops) => {
-    if(prevprops.player.jamId !== this.props.player.jamId) {
-			this.refs.audio.currentTime = 0
+    // if(prevprops.player.jamId !== this.props.player.jamId) {
+		// 	this.refs.audio.currentTime = 0
+		//
+		// 	if(!this.props.analyser.instance) {
+		//
+		// 		var AudioContext = window.AudioContext
+		// 		|| window.webkitAudioContext
+		// 		|| false;
+		// 		let context = new AudioContext();
+		// 		let analyser = context.createAnalyser();
+		// 		let audio = this.refs.audio
+		// 		audio.crossOrigin = "anonymous";
+		// 		let audioSrc = context.createMediaElementSource(audio);
+		// 		audioSrc.connect(analyser);
+		// 		audioSrc.connect(context.destination);
+		// 		console.log("componentDidUpdate: ", analyser)
+		// 		this.props.setAnalyser(analyser)
+		// 	}
+    // }
 
-			if(!this.props.player.analyser) {
+		if(this.refs.audio) {
+			if(prevprops.player.jamId !== this.props.player.jamId) {
+				this.refs.audio.currentTime = 0
 
-				var AudioContext = window.AudioContext
-				|| window.webkitAudioContext
-				|| false;
-				let context = new AudioContext();
-				let analyser = context.createAnalyser();
-				let audio = this.refs.audio
-				audio.crossOrigin = "anonymous";
-				let audioSrc = context.createMediaElementSource(audio);
-				audioSrc.connect(analyser);
-				audioSrc.connect(context.destination);
-				console.log("componentDidUpdate: ", analyser)
-				this.props.setAnalyser(analyser)
+				if(!this.state.connected) {
+					var AudioContext = window.AudioContext
+					|| window.webkitAudioContext
+					|| false;
+					let context = new AudioContext();
+					let analyser = context.createAnalyser();
+					let audio = this.refs.audio
+					audio.crossOrigin = "anonymous";
+					let audioSrc = context.createMediaElementSource(audio);
+					audioSrc.connect(analyser);
+					audioSrc.connect(context.destination);
+					this.props.passAnalyser(analyser)
+					this.setState({
+						connected: true
+					})
+				}
+
 			}
-    }
 
-    if(
-      prevprops.player.seekToSeconds !== this.props.player.seekToSeconds
-      && this.props.player.seekToSeconds > 0
-    ) {
-      this.refs.audio.currentTime = this.props.player.seekToSeconds
-      this.play()
-    }
+	    // if(
+	    //   prevprops.player.seekToSeconds !== this.props.player.seekToSeconds
+	    //   && this.props.player.seekToSeconds > 0
+	    // ) {
+	    //   this.refs.audio.currentTime = this.props.player.seekToSeconds
+	    //   this.play()
+	    // }
+			//
+	    // if(prevprops.player.status !== this.props.player.status) {
+	    //   this.changeStatus(this.props.player.status)
+	    // }
+			//
+			// if(prevprops.player.jamId !== this.props.player.jamId) {
+			// 	this.refs.audio.currentTime = 0
+	    // }
 
-    if(prevprops.player.status !== this.props.player.status) {
-      this.changeStatus(this.props.player.status)
-    }
+			if(this.props.jam._id == this.props.player.jamId) {
+				if(
+		      prevprops.player.seekToSeconds !== this.props.player.seekToSeconds
+		      && this.props.player.seekToSeconds > 0
+		    ) {
+		      this.refs.audio.currentTime = this.props.player.seekToSeconds
+		      this.play()
+		    }
+
+		    if(prevprops.player.status !== this.props.player.status) {
+		      this.changeStatus(this.props.player.status)
+		    }
+			} else {
+				this.pause()
+			}
+		}
+		
   }
 
   changeStatus = (status) => {
@@ -117,8 +173,9 @@ function mapStateToProps(state) {
 	return {
 		auth: state.app.user,
 		location: state.router.location,
-    player: state.player
+    player: state.player,
+		analyser: state.analyser
 	};
 }
 
-export default connect(mapStateToProps, {trackPlaying, setAnalyser})(Jam);
+export default connect(mapStateToProps, {trackPlaying, setAnalyser})(Player);

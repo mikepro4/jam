@@ -4,12 +4,17 @@ import { Link } from "react-router-dom";
 import classNames from "classnames"
 import posed, { PoseGroup } from 'react-pose';
 
+import Player from '../player'
+
+import {
+	trackPlaying
+} from '../../../redux/actions/playerActions'
 
 // Animation defaults
 
 class Viz extends Component {
   state = {
-    audioLoaded: false,
+    connected: false,
     play: true,
     points: [],
     test: 0,
@@ -38,20 +43,28 @@ class Viz extends Component {
   };
 
   componentDidMount = () => {
-    // this.updateDimensions()
     this.updateDimensions()
   }
 
   componentDidUpdate = (prevprops) => {
+    if(this.refs.audio) {
+      if(this.props.jam._id == this.props.player.jamId) {
 
-    // if(prevprops.player.jamId !== this.props.player.jamId) {
-    //   this.setState({
-    //     audioLoaded: false
-    //   }, () => {
-    //     this.update()
-    //
-    //   })
-    // }
+        if(
+          prevprops.player.seekToSeconds !== this.props.player.seekToSeconds
+          && this.props.player.seekToSeconds > 0
+        ) {
+          this.refs.audio.currentTime = this.props.player.seekToSeconds
+          this.play()
+        }
+
+        if(prevprops.player.status !== this.props.player.status) {
+          this.changeStatus(this.props.player.status)
+        }
+      } else {
+        this.pause()
+      }
+    }
 
     if(prevprops.isZoomed !== this.props.isZoomed
       || prevprops.app.clientWidth !== this.props.app.clientWidth
@@ -223,26 +236,36 @@ class Viz extends Component {
     //   }
     // }
 
+    let analyser = null
+
+    if(!this.state.connected && this.refs.audio) {
+      var AudioContext = window.AudioContext
+      || window.webkitAudioContext
+      || false;
+      let context = new AudioContext();
+      analyser = context.createAnalyser();
+      let audio = this.refs.audio
+      audio.crossOrigin = "anonymous";
+      let audioSrc = context.createMediaElementSource(audio);
+      audioSrc.connect(analyser);
+      audioSrc.connect(context.destination);
+      this.setState({
+        connected: true
+      })
+    }
+
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext('2d')
-    this.renderFrame(ctx)
+    this.renderFrame(ctx, analyser)
   }
 
-  getSoundModifier = (i) => {
-    let freqData = new Uint8Array(this.props.player.analyser.frequencyBinCount)
-    this.props.player.analyser.getByteFrequencyData(freqData)
+  getSoundModifier = (i, analyser) => {
+    let freqData = new Uint8Array(analyser.frequencyBinCount)
+    analyser.getByteFrequencyData(freqData)
     return freqData[i]
   }
 
-  renderFrame = (ctx) => {
-
-    let analyser
-
-    if(this.props.jam._id == this.props.player.jamId) {
-      analyser = this.props.player.analyser
-    } else {
-      analyser = null
-    }
+  renderFrame = (ctx, analyser) => {
 
     if(this.props.jam._id == this.props.player.jamId) {
 
@@ -254,7 +277,8 @@ class Viz extends Component {
         rotate: this.state.rotate + this.state.rotate_speed
       })
 
-
+      let freqData = new Uint8Array(analyser.frequencyBinCount)
+      analyser.getByteFrequencyData(freqData)
 
       for (let i = 0; i < this.state.points.length; i++) {
         // console.log(freqData[i]/2)
@@ -263,9 +287,9 @@ class Viz extends Component {
 
         if(analyser) {
           if (i <= 1024) {
-            soundModifier = this.getSoundModifier(i)/2
+            soundModifier = freqData[i]/2
           } else {
-            soundModifier = this.getSoundModifier(i-1024)/2
+            soundModifier = freqData[i-1024]/2
           }
 
           if(soundModifier == 0) {
@@ -329,30 +353,45 @@ class Viz extends Component {
 
   }
 
-  setAudioContext = () => {
-    // let audio = document.getElementById(`audio-${this.props.jam._id}`);
-    //
-    // if(audio) {
-    //   this.setState({
-    //     audioLoaded: true
-    //   })
-    //
-    //   var AudioContext = window.AudioContext
-    //   || window.webkitAudioContext
-    //   || false;
-    //   let context = new AudioContext();
-    //   let analyser = context.createAnalyser();
-    //   audio.crossOrigin = "anonymous";
-    //   let audioSrc = context.createMediaElementSource(audio);
-    //   audioSrc.connect(analyser);
-    //   audioSrc.connect(context.destination);
-    //
-    //   console.log("set audio context")
-    // }
+  changeStatus = (status) => {
+    switch (status) {
+      case "play":
+  			return this.play()
+      case "pause":
+  			return this.pause()
+      case "stop":
+        return this.stop()
+  		default:
+  			return
+    }
+  }
+
+  play = () => {
+    console.log("play audio")
+
+    this.refs.audio.play()
+  }
+
+  pause = () => {
+    console.log("pause");
+    this.refs.audio.pause()
+  }
+
+  stop = () => {
+    console.log("stop")
+    this.refs.audio.pause()
+    this.refs.audio.currentTime = 0
+  }
+
+  playing = () => {
+    this.props.trackPlaying(
+      this.props.player.jamId,
+      this.refs.audio.currentTime,
+      this.props.player.trackMetadata
+    )
   }
 
 	render() {
-
 		return (
       <div className="viz-container" ref="viz_container">
         <canvas
@@ -361,6 +400,17 @@ class Viz extends Component {
           width={this.state.width}
           height={this.state.height}
         />
+        <audio
+          ref="audio"
+          controls={true}
+          src={this.props.player.jamId ? this.props.player.trackMetadata.audioUrl : ""}
+          onTimeUpdate={() => {
+            this.playing()
+          }}
+          onLoadedData={() => {
+          }}
+          >
+        </audio>
       </div>
 		);
 	}
@@ -371,8 +421,9 @@ function mapStateToProps(state) {
 		auth: state.app.user,
 		location: state.router.location,
     app: state.app,
+    analyser: state.analyser,
     player: state.player
 	};
 }
 
-export default connect(mapStateToProps, {})(Viz);
+export default connect(mapStateToProps, {trackPlaying})(Viz);

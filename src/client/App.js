@@ -129,8 +129,6 @@ class App extends Component {
 					clientWidth={this.state.clientWidth}
 				/>
 
-				<Player />
-
 				<Header/>
 
 				<div className="of-grid of-grid-app">
