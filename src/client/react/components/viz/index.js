@@ -179,6 +179,7 @@ class Viz extends Component {
   paint = () => {
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext('2d')
+    ctx.fillStyle = "rgba(0, 0, 0, 0)";
     ctx.width = this.state.width;
     ctx.height = this.state.height;
     let points = this.generatePoints()
