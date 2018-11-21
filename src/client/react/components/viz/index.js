@@ -254,6 +254,8 @@ class Viz extends Component {
         rotate: this.state.rotate + this.state.rotate_speed
       })
 
+      let freqData = new Uint8Array(this.props.player.analyser.frequencyBinCount)
+      this.props.player.analyser.getByteFrequencyData(freqData)
 
 
       for (let i = 0; i < this.state.points.length; i++) {
@@ -263,9 +265,9 @@ class Viz extends Component {
 
         if(analyser) {
           if (i <= 1024) {
-            soundModifier = this.getSoundModifier(i)/2
+            soundModifier = freqData[i]/2
           } else {
-            soundModifier = this.getSoundModifier(i-1024)/2
+            soundModifier = freqData[i-1024]/2
           }
 
           if(soundModifier == 0) {
